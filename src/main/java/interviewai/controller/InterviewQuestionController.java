@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/questions")
 public class InterviewQuestionController {
@@ -42,10 +43,10 @@ public class InterviewQuestionController {
             @PathVariable Long id,
             @RequestBody InterviewQuestion updatedQuestion) {
         return repository.findById(id)
-                .map(existingQuestion -> {
-                    existingQuestion.setCountry(updatedQuestion.getCountry());
-                    existingQuestion.setQuestion(updatedQuestion.getQuestion());
-                    InterviewQuestion savedQuestion = repository.save(existingQuestion);
+                .map(question -> {
+                    question.setCountry(updatedQuestion.getCountry());
+                    question.setQuestion(updatedQuestion.getQuestion());
+                    InterviewQuestion savedQuestion = repository.save(question);
                     return ResponseEntity.ok(savedQuestion);
                 })
                 .orElse(ResponseEntity.notFound().build());
@@ -59,6 +60,6 @@ public class InterviewQuestionController {
                     repository.delete(question);
                     return ResponseEntity.noContent().build();
                 })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 }
